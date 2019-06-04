@@ -31,6 +31,7 @@ public class Flight {
 
 
 
+
 	public int getPrecio() {
 		return precio;
 	}

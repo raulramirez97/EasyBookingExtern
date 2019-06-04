@@ -14,6 +14,7 @@ import paypal.rmi.server.PayPal;
 public class Airline extends UnicastRemoteObject implements IAirline 
 {
 	private static List<Flight> listavuelos = new ArrayList<Flight>();
+	private static int cod=0;
 	
 		final long serialVersionUID = 1L;
 		
@@ -52,16 +53,51 @@ public class Airline extends UnicastRemoteObject implements IAirline
 	
 	public List<Flight> BuscarVuelos(String origen, String destination, String fecha, int passenger) 
 	{
-		return null;
+		List<Flight> copia = new ArrayList<Flight>();
+		copia=null;
+		 Flight aux = new Flight();
+		
+		for(int i=0; i<listavuelos.size(); i++)
+		{
+			aux=listavuelos.get(i);
+			if(aux.getDeparture().getPlace().equals(origen)
+				&& aux.getArrival().getPlace().equals(destination) 
+				&& aux.getDeparture_date().equals(fecha) 
+				&& aux.getTotal_seats()>passenger)
+			{
+				copia.add(listavuelos.get(i));
+			}
+			
+		}
+		return copia;
 	}
 	
 	public List<Flight> BuscarTodoVuelos() 
 	{
-		return null;
+		return listavuelos;
 	}
 	
 	public String ReservaVuelo(int cod_vuelo, String usuario, int pasajeros) 
 	{
+		String codigo;
+		Flight aux = new Flight();
+		
+		for(int i=0; i<listavuelos.size(); i++)
+		{
+			aux=listavuelos.get(i);
+			if(aux.getFlight_number()== cod_vuelo
+				&& aux.getTotal_seats()> pasajeros)
+			{
+			listavuelos.remove(i);
+			aux.setTotal_seats(aux.getTotal_seats()- pasajeros);
+			listavuelos.add(aux);
+			
+			codigo= cod+"_"+usuario+pasajeros+"_"+cod_vuelo;
+			cod++;
+			return codigo;
+			}
+			
+		}
 		return null;
 	}
 	
