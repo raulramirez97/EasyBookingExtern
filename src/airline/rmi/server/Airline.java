@@ -1,0 +1,88 @@
+package airline.rmi.server;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
+
+import paypal.rmi.server.IPayment;
+import paypal.rmi.server.PayPal;
+
+public class Airline extends UnicastRemoteObject implements IAirline 
+{
+	private static List<Flight> listavuelos = new ArrayList<Flight>();
+	
+		final long serialVersionUID = 1L;
+		
+		protected Airline() throws RemoteException 
+		{
+			super();
+		}	
+		
+		public static void main(String[] args) 
+		
+		{
+			if (args.length != 3) {
+				System.out.println("usage: java [policy] [codebase] server.Server [host] [port] [server]");
+				System.exit(0);
+			}
+			if (System.getSecurityManager() == null) {
+				System.setSecurityManager(new SecurityManager());
+			}
+			String name = "//" + args[0] + ":" + args[1] + "/" + args[2];
+			try 
+			{		
+				IAirline objServer = new Airline ();
+				Registry registry = LocateRegistry.createRegistry(Integer.valueOf(args[1]));
+				registry.rebind(name, (Remote) objServer);
+				System.out.println("* Server '" + name + "' active and waiting...");
+			} 
+			catch (Exception e) 
+			{
+				System.err.println("- Exception running the server: " + e.getMessage());
+				e.printStackTrace();
+			}
+			
+			registrarVuelos();
+		}
+	
+	
+	public List<Flight> BuscarVuelos(String origen, String destination, String fecha, int passenger) 
+	{
+		return null;
+	}
+	
+	public List<Flight> BuscarTodoVuelos() 
+	{
+		return null;
+	}
+	
+	public String ReservaVuelo(int cod_vuelo, String usuario, int pasajeros) 
+	{
+		return null;
+	}
+	
+	public static void registrarVuelos()
+	{
+		Airport Londres = new Airport(1, "Londres");
+		Airport Madrid = new Airport(2, "Madrid");
+		Airport Roma = new Airport(3, "Roma");
+		
+		Flight vuelo1= new Flight(1, "1-05-2019", "1-05-2019", 34, 120, null, Londres, Madrid);
+		Flight vuelo2= new Flight(2, "4-07-2019", "4-07-2019", 40, 20, null, Madrid, Londres);
+		Flight vuelo3= new Flight(3, "3-06-2019", "3-06-2019", 40, 49, null, Roma, Madrid);
+		Flight vuelo4= new Flight(4, "2-05-2019", "2-05-2019", 40, 10, null, Madrid,Roma);
+		Flight vuelo5= new Flight(5, "5-05-2019", "5-05-2019", 50, 1000, null, Londres,Roma);
+		listavuelos.add(vuelo1);
+		listavuelos.add(vuelo2);
+		listavuelos.add(vuelo3);
+		listavuelos.add(vuelo4);
+		listavuelos.add(vuelo5);
+	}
+}
+
+
+
